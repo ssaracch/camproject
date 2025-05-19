@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Historique des Alertes - Tableau de Bord</title>
+</head>
+<body>
+  <div class="dashboard-container">
+    <main class="main-content" style="width: 100%;">
+      <header class="main-header">
+        <h1>Historique des Alertes</h1>
+        <div class="header-actions">
+          <div class="search-bar">
+            <input type="text" placeholder="Rechercher une alerte..." />
+            <i class="fas fa-search"></i>
+          </div>
+          <button class="btn btn-primary" id="refreshBtn">
+            <i class="fas fa-sync-alt"></i> Actualiser
+          </button>
+        </div>
+      </header>
+
+      <div class="content-container">
+        <div class="stats-cards">
+          <div class="stat-card">
+            <div class="stat-icon high">
+              <i class="fas fa-exclamation-triangle"></i>
+            </div>
+            <div class="stat-info">
+              <h3>5</h3>
+              <p>Alertes critiques</p>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon medium">
+              <i class="fas fa-bell"></i>
+            </div>
+            <div class="stat-info">
+              <h3>8</h3>
+              <p>Alertes moyennes</p>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon low">
+              <i class="fas fa-info-circle"></i>
+            </div>
+            <div class="stat-info">
+              <h3>12</h3>
+              <p>Alertes mineures</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="table-container">
+          <div class="table-header">
+            <h2>Historique des Alertes</h2>
+            <div class="table-actions">
+              <div class="filter-dropdown">
+                <select id="severityFilter">
+                  <option value="all">Toutes les sévérités</option>
+                  <option value="High">Critique</option>
+                  <option value="Medium">Moyenne</option>
+                  <option value="Low">Mineure</option>
+                </select>
+              </div>
+              <button class="btn btn-secondary">
+                <i class="fas fa-file-export"></i> Exporter
+              </button>
+            </div>
+          </div>
+
+          <table id="alertsTable">
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Type d'Alerte</th>
+                <th>Caméra</th>
+                <th>Localisation</th>
+                <th>Gravité</th>
+                <th>Statut</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- Données d'alerte injectées via Angular -->
+            </tbody>
+          </table>
+
+          <div class="table-footer">
+            <div class="pagination-info">
+              Affichage de <span id="startItem">1</span> à <span id="endItem">10</span> sur <span id="totalItems">25</span> alertes
+            </div>
+            <div class="pagination-controls">
+              <button class="pagination-btn" id="prevPage"><i class="fas fa-chevron-left"></i></button>
+              <span class="page-numbers">
+                <button class="page-btn active">1</button>
+                <button class="page-btn">2</button>
+                <button class="page-btn">3</button>
+              </span>
+              <button class="pagination-btn" id="nextPage"><i class="fas fa-chevron-right"></i></button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Modal pour voir les détails d'une alerte -->
+  <div class="modal" id="alertModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Détails de l'Alerte</h3>
+        <button class="close-modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p><strong>Caméra :</strong> <span id="modalCameraName">Front Gate Cam</span></p>
+        <p><strong>Date :</strong> <span id="modalAlertDate">2025-05-10 08:30</span></p>
+        <p><strong>Type :</strong> <span id="modalAlertType">Mouvement détecté</span></p>
+        <p><strong>Localisation :</strong> <span id="modalLocation">Main Entrance</span></p>
+        <p><strong>Gravité :</strong> <span id="modalSeverity">Critique</span></p>
+        <p><strong>Statut :</strong> <span id="modalStatus">Active</span></p>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary close-modal">Fermer</button>
+        <button class="btn btn-primary" id="acknowledgeBtn">Accuser réception</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
