@@ -7,9 +7,9 @@ import { Component } from '@angular/core';
   styleUrl: './layout.component.css'
 })
 export class LayoutComponent {
-  isSidebarOpen = true;
+   isSidebarHidden = false;
 
   toggleSidebar() {
-    this.isSidebarOpen = !this.isSidebarOpen;
+    this.isSidebarHidden = !this.isSidebarHidden;
   }
 }

@@ -12,6 +12,7 @@ import { CameraManagementComponent } from './components/camera-management/camera
 import { LayoutComponent } from './components/layout/layout.component';
 import { NgApexchartsModule } from 'ng-apexcharts';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
+import { CameraComponent } from './components/camera/camera.component';
 
 @NgModule({
   declarations: [
@@ -22,7 +23,8 @@ import { DashboardComponent } from './components/dashboard/dashboard.component';
     CameraDetailComponent,
     AlertsComponent,
     CameraManagementComponent,
-    LayoutComponent
+    LayoutComponent,
+    CameraComponent
   ],
   imports: [
     BrowserModule,

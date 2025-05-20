@@ -5,6 +5,7 @@ import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { CameraListComponent } from './components/camera-list/camera-list.component';
 import { LayoutComponent } from './components/layout/layout.component';
 import { AlertsComponent } from './components/alerts/alerts.component';
+import { CameraComponent } from './components/camera/camera.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -16,7 +17,10 @@ const routes: Routes = [
     children: [
       { path: 'dashboard', component: DashboardComponent },
       { path: 'camera-list', component: CameraListComponent },
-  { path: 'alerts', component: AlertsComponent },
+      { path: 'alerts', component: AlertsComponent },
+      { path: 'camera', component: CameraComponent },
+
+
     ]
   }
 
