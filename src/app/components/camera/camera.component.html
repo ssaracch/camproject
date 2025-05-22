@@ -1,6 +1,36 @@
-<!-- camera.component.html -->
-<div class="camera-container">
-  <video #videoElement autoplay playsinline></video>
-  <button (click)="startCamera()">Start Camera</button>
-  <button (click)="stopCamera()" *ngIf="isCameraOn">Stop Camera</button>
-</div>
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Historique des Alertes - Tableau de Bord</title>
+</head>
+<body>
+  <div class="dashboard-container">
+    <main class="main-content" style="width: 100%;">
+      <header class="main-header">
+        <h1>Historique des Alertes</h1>
+        
+      </header>
+
+            <!-- camera.component.html -->
+        <div class="camera-container">
+        <video #videoElement autoplay playsinline></video>
+        <button (click)="startCamera()">Start Camera</button>
+        <button (click)="stopCamera()" *ngIf="isCameraOn">Stop Camera</button>
+
+        <canvas #canvasElement style="display: none;"></canvas>
+        <button (click)="Captureframe()" *ngIf="isCameraOn">capture frame</button>
+
+        </div>
+    </main>
+  </div>
+
+ 
+
+  <script src="script.js"></script>
+</body>
+</html>
+
+
+
