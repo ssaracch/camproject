@@ -3,8 +3,12 @@
   <!-- Sidebar: vertical nav on the left -->
   <aside class="sidebar" [class.hidden]="isSidebarHidden">
      <div class="sidebar-header">
-      <h2>OCP Group Facility Monitoring</h2>
-    </div>
+
+<!-- Option 2: Relative path (no leading slash) -->
+<h2>OCP Group Facility Monitoring</h2>
+
+</div>
+
     <nav class="sidebar-nav">
       <ul>
         <li><a routerLink="/dashboard" routerLinkActive="active">
@@ -15,8 +19,7 @@
         </a></li>
        <li><a routerLink="/camera-list" routerLinkActive="active">
   <svg class="nav-icon" viewBox="0 0 24 24" width="20" height="20">
-    <path fill="currentColor" d="M4 4h7v7H4zm0 9h7v7H4zm9-9h7v7h-7zm0 9h7v7h-7z"/>
-    <path fill="currentColor" d="M17 6h2v2h-2zm0 4h2v2h-2zm-8-4h2v2H9zm0 4h2v2H9zm8 6h2v2h-2zm-8 0h2v2H9z"/>
+    <path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/>
   </svg>
   Cameras-list
 </a></li>
@@ -33,6 +36,7 @@
   </svg>
   Camera
 </a></li>
+
       </ul>
     </nav>
   </aside>

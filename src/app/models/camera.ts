@@ -1,8 +1,8 @@
+// camera.model.ts
 export interface Camera {
-  id: number;
-  name: string;
+  id_Camera?: number;
+  nom_Camera: string;
   location: string;
-  status: 'online' | 'offline' | 'blurred';
-  userId: number;
-  userName: string;
+  status_Camera: 'normal' | 'offline' | 'blurry';
+  id_User: number;
 }
