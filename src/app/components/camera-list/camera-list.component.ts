@@ -65,12 +65,15 @@ export class CameraListComponent implements OnInit {
   }
 
   private initializeForm(): void {
-    this.cameraForm = this.formBuilder.group({
-      nom_Camera: ['', [Validators.required, Validators.minLength(3)]],
-      location: ['', [Validators.required, Validators.minLength(3)]],
-      dateCreation: ['', Validators.required]
-    });
-  }
+  this.cameraForm = this.formBuilder.group({
+    nom_Camera: ['', [Validators.required, Validators.minLength(3)]],
+    location: ['', [Validators.required, Validators.minLength(3)]],
+    dateCreation: ['', Validators.required],
+    status_Camera: ['', Validators.required],
+    id_User: ['', Validators.required]
+  });
+}
+
 
   filterCameras(): void {
     if (this.selectedStatus === 'all') {
@@ -114,47 +117,60 @@ export class CameraListComponent implements OnInit {
   }
 
   private populateForm(camera: Camera): void {
-    this.cameraForm.patchValue({
-      nom_Camera: camera.nom_Camera,
-      location: camera.location,
-      dateCreation: camera.dateCreation || new Date().toISOString().split('T')[0]
-    });
-  }
+  this.cameraForm.patchValue({
+    nom_Camera: camera.nom_Camera,
+    location: camera.location,
+    dateCreation: camera.dateCreation || new Date().toISOString().split('T')[0],
+    status_Camera: camera.status_Camera,
+    id_User: camera.id_User
+  });
+}
+
 
   saveCamera(): void {
-    if (this.cameraForm.valid) {
-      const formValue = this.cameraForm.value;
-      
-      if (this.isEditMode && this.currentCamera) {
-        // Update existing camera
-        const index = this.cameras.findIndex(c => c.id_Camera === this.currentCamera!.id_Camera);
-        if (index !== -1) {
-          this.cameras[index] = {
-            ...this.currentCamera,
-            nom_Camera: formValue.nom_Camera,
-            location: formValue.location,
-            dateCreation: formValue.dateCreation
-          };
-        }
-      } else {
-        // Add new camera
-        const newCamera: Camera = {
-          id_Camera: this.generateCameraId(),
+  if (this.cameraForm.valid) {
+    const formValue = this.cameraForm.value;
+
+    if (this.isEditMode && this.currentCamera) {
+      const index = this.cameras.findIndex(c => c.id_Camera === this.currentCamera!.id_Camera);
+      if (index !== -1) {
+        this.cameras[index] = {
+          ...this.currentCamera,
           nom_Camera: formValue.nom_Camera,
           location: formValue.location,
-          status_Camera: 'normal',
-          id_User: 'USER001', // This should come from current user context
-          dateCreation: formValue.dateCreation
+          dateCreation: formValue.dateCreation,
+          status_Camera: formValue.status_Camera,
+          id_User: formValue.id_User
         };
-        this.cameras.push(newCamera);
       }
-      
-      this.filterCameras(); // Refresh filtered list
-      this.closeModal();
     } else {
-      this.markFormGroupTouched();
+      const newCamera: Camera = {
+        id_Camera: this.generateCameraId(),
+        nom_Camera: formValue.nom_Camera,
+        location: formValue.location,
+        dateCreation: formValue.dateCreation,
+        status_Camera: formValue.status_Camera,
+        id_User: formValue.id_User
+      };
+      this.cameras.push(newCamera);
     }
+
+    this.filterCameras();
+    this.closeModal();
+  } else {
+    this.markFormGroupTouched();
   }
+}
+
+
+get status_Camera() {
+  return this.cameraForm.get('status_Camera');
+}
+
+get id_User() {
+  return this.cameraForm.get('id_User');
+}
+
 
   editCamera(camera: Camera): void {
     // This method would be called from the template

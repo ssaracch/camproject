@@ -16,11 +16,13 @@
             <!-- camera.component.html -->
         <div class="camera-container">
         <video #videoElement autoplay playsinline></video>
+        <div class="camera-buttons">
         <button (click)="startCamera()">Start Camera</button>
-        <button (click)="stopCamera()" *ngIf="isCameraOn">Stop Camera</button>
+                <canvas #canvasElement style="display: none;"></canvas>
 
-        <canvas #canvasElement style="display: none;"></canvas>
-        <button (click)="Captureframe()" *ngIf="isCameraOn">capture frame</button>
+        <button (click)="stopCamera()" *ngIf="isCameraOn">Stop Camera</button>
+        <button (click)="Captureframe()" *ngIf="isCameraOn">Capture Frame</button>
+    </div>
 
         </div>
     </main>

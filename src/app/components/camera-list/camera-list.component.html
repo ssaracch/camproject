@@ -92,7 +92,7 @@
   </main>
 </div>
 
-<!-- Modal Template -->
+
 <ng-template #addCameraModal let-modal>
   <div class="modal-content">
     <div class="modal-header">
@@ -103,6 +103,7 @@
     </div>
     <div class="modal-body">
       <form [formGroup]="cameraForm" (ngSubmit)="onSubmit()">
+        <!-- Nom de la caméra -->
         <div class="form-group">
           <label>Nom de la caméra</label>
           <input 
@@ -114,6 +115,8 @@
             {{ getErrorMessage('nom_Camera') }}
           </div>
         </div>
+
+        <!-- Localisation -->
         <div class="form-group">
           <label>Localisation</label>
           <input 
@@ -125,6 +128,8 @@
             {{ getErrorMessage('location') }}
           </div>
         </div>
+
+        <!-- Date de création -->
         <div class="form-group">
           <label>Date de création</label>
           <div class="date-input-wrapper">
@@ -135,8 +140,36 @@
             <i class="fas fa-calendar-alt calendar-icon"></i>
           </div>
         </div>
+
+        <!-- Statut -->
+        <div class="form-group">
+          <label>Statut</label>
+          <select class="form-control" formControlName="status_Camera">
+            <option value="" disabled selected hidden>Choisir un statut</option>
+            <option value="normal">Normal</option>
+            <option value="offline">Hors ligne</option>
+            <option value="blurry">Floue</option>
+          </select>
+          <div class="error-message" *ngIf="status_Camera?.invalid && status_Camera?.touched">
+            {{ getErrorMessage('status_Camera') }}
+          </div>
+        </div>
+
+        <!-- Utilisateur -->
+        <div class="form-group">
+          <label>Utilisateur</label>
+          <input 
+            type="text" 
+            class="form-control" 
+            placeholder="ID de l'utilisateur"
+            formControlName="id_User">
+          <div class="error-message" *ngIf="id_User?.invalid && id_User?.touched">
+            {{ getErrorMessage('id_User') }}
+          </div>
+        </div>
       </form>
     </div>
+
     <div class="modal-footer">
       <button type="button" class="btn btn-outline-secondary" (click)="modal.dismiss()">Annuler</button>
       <button type="button" class="btn btn-primary" (click)="saveCamera(); modal.close()">
