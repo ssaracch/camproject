@@ -8,10 +8,17 @@ import { Component, ViewChild, ElementRef } from '@angular/core';
 })
 export class CameraComponent {
 
-
   @ViewChild('videoElement') videoElement!: ElementRef;
+  @ViewChild('canvasElement') canvasElement!: ElementRef<HTMLCanvasElement>;
+
   isCameraOn = false;
   stream: MediaStream | null = null;
+
+  predictionResult: string | null = null;
+  confidence: string | null = null;
+
+  // Store history of predictions
+  predictionHistory: { image: string, label: string, confidence: string }[] = [];
 
   async startCamera() {
     try {
@@ -39,34 +46,50 @@ export class CameraComponent {
     this.stopCamera();
   }
 
-  @ViewChild('canvasElement') canvasElement!: ElementRef<HTMLCanvasElement>;
-Captureframe() {
-  const video = this.videoElement.nativeElement as HTMLVideoElement;
-  const canvas = this.canvasElement.nativeElement;
-  const context = canvas.getContext('2d');
+  Captureframe() {
+    const video = this.videoElement.nativeElement as HTMLVideoElement;
+    const canvas = this.canvasElement.nativeElement;
+    const context = canvas.getContext('2d');
 
-  if (!context) {
-    console.error('Canvas context not available');
-    return;
+    if (!context) {
+      console.error('Canvas context not available');
+      return;
+    }
+
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+
+    context.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+    const imageData = canvas.toDataURL('image/jpeg');
+    this.sendToBackend(imageData);
   }
 
-  // Adapter la taille du canvas à la vidéo
-  canvas.width = video.videoWidth;
-  canvas.height = video.videoHeight;
+  sendToBackend(imageBase64: string) {
+    const payload = { image: imageBase64 };
 
-  // Dessiner le cadre actuel de la vidéo sur le canvas
-  context.drawImage(video, 0, 0, canvas.width, canvas.height);
+    fetch('http://localhost:5000/predict', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    })
+      .then(response => response.json())
+      .then(data => {
+        const label = data.prediction === 1 ? 'Clear' : 'Not Clear';
+        const conf = (data.probability[data.prediction] * 100).toFixed(2);
+        this.predictionResult = label;
+        this.confidence = conf ;
 
-  // Convertir le canvas en image (base64)
-  const imageData = canvas.toDataURL('image/png');
-  console.log('Captured frame as base64 image:', imageData);
-
-  // Optionnel : télécharger l’image automatiquement
-  const link = document.createElement('a');
-  link.href = imageData;
-  link.download = 'captured_frame.png';
-  link.click();
+        // Add new result to history table
+        this.predictionHistory.unshift({
+          image: imageBase64,
+          label: this.predictionResult,
+          confidence: this.confidence
+        });
+      })
+      .catch(error => {
+        console.error('Error contacting backend:', error);
+        alert('Failed to get prediction from backend.');
+      });
+  }
 }
-
-}
-
