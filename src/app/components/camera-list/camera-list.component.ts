@@ -6,42 +6,54 @@ export interface Camera {
   id_Camera: string;
   nom_Camera: string;
   location: string;
-  status_Camera: string;
+  ip_adress: string;
+  mac_adress: string;
+  status_Camera: 'normal' | 'offline' | 'blurry';
   id_User: string;
+  id_Groupe: string;
   dateCreation?: string;
 }
 
 @Component({
-  selector: 'app-camera-management',
+  selector: 'app-camera-list',
   standalone: false,
   templateUrl: './camera-list.component.html',
-  styleUrl: './camera-list.component.css'
+  styleUrls: ['./camera-list.component.css']
 })
 export class CameraListComponent implements OnInit {
-  
+
   cameras: Camera[] = [
     {
       id_Camera: 'CAM001',
       nom_Camera: 'Caméra Entrée',
       location: 'Hall Principal',
+      ip_adress: '192.168.1.10',
+      mac_adress: '00:1A:2B:3C:4D:5E',
       status_Camera: 'normal',
       id_User: 'USER001',
+      id_Groupe: 'GROUPE001',
       dateCreation: '2024-01-15'
     },
     {
       id_Camera: 'CAM002',
       nom_Camera: 'Caméra Parking',
       location: 'Parking Nord',
+      ip_adress: '192.168.1.11',
+      mac_adress: '00:1A:2B:3C:4D:5F',
       status_Camera: 'offline',
       id_User: 'USER002',
+      id_Groupe: 'GROUPE002',
       dateCreation: '2024-01-10'
     },
     {
       id_Camera: 'CAM003',
       nom_Camera: 'Caméra Bureau',
       location: 'Bureau Direction',
+      ip_adress: '192.168.1.12',
+      mac_adress: '00:1A:2B:3C:4D:60',
       status_Camera: 'blurry',
       id_User: 'USER003',
+      id_Groupe: 'GROUPE001',
       dateCreation: '2024-01-20'
     }
   ];
@@ -65,47 +77,60 @@ export class CameraListComponent implements OnInit {
   }
 
   private initializeForm(): void {
-  this.cameraForm = this.formBuilder.group({
-    nom_Camera: ['', [Validators.required, Validators.minLength(3)]],
-    location: ['', [Validators.required, Validators.minLength(3)]],
-    dateCreation: ['', Validators.required],
-    status_Camera: ['', Validators.required],
-    id_User: ['', Validators.required]
-  });
-}
-
-
-  filterCameras(): void {
-    if (this.selectedStatus === 'all') {
-      this.filteredCameras = [...this.cameras];
-    } else {
-      this.filteredCameras = this.cameras.filter(
-        camera => camera.status_Camera === this.selectedStatus
-      );
-    }
-  }
-
-  openAddModal(content: TemplateRef<any>): void {
-    this.isEditMode = false;
-    this.currentCamera = null;
-    this.resetForm();
-    this.modalRef = this.modalService.open(content, {
-      centered: true,
-      backdrop: 'static',
-      keyboard: false,
-      size: 'md'
+    this.cameraForm = this.formBuilder.group({
+      nom_Camera: ['', [Validators.required, Validators.minLength(3)]],
+      location: ['', [Validators.required, Validators.minLength(3)]],
+      ip_adress: ['', [Validators.required, Validators.pattern(/^(\d{1,3}\.){3}\d{1,3}$/)]],
+      mac_adress: ['', [Validators.required, Validators.pattern(/^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$/)]],
+      status_Camera: ['', Validators.required],
+      id_User: ['', Validators.required],
+      id_Groupe: ['', Validators.required],
+      dateCreation: ['', Validators.required]
     });
   }
 
-  openEditModal(content: TemplateRef<any>, camera: Camera): void {
-    this.isEditMode = true;
-    this.currentCamera = camera;
-    this.populateForm(camera);
-    this.modalRef = this.modalService.open(content, {
-      centered: true,
-      backdrop: 'static',
-      keyboard: false,
-      size: 'md'
+  filterCameras(): void {
+    this.filteredCameras = this.selectedStatus === 'all'
+      ? [...this.cameras]
+      : this.cameras.filter(c => c.status_Camera === this.selectedStatus);
+  }
+
+  openAddModal(cameraModalTemplate: TemplateRef<any>) {
+  this.isEditMode = false;
+  this.cameraForm.reset();
+  this.modalService.open(cameraModalTemplate, { size: 'lg' });
+}
+
+  openEditModal(editModalTemplate: TemplateRef<any>, camera: any) {
+  this.isEditMode = true;
+  // Patch les valeurs dans le formulaire
+  this.cameraForm.patchValue({
+    nom_Camera: camera.nom_Camera,
+    location: camera.location,
+    ip_adress: camera.ip_adress,
+    mac_adress: camera.mac_adress,
+    dateCreation: camera.dateCreation ? camera.dateCreation.split('T')[0] : '', // pour date input
+    status_Camera: camera.status_Camera,
+    id_User: camera.id_User,
+    id_Groupe: camera.id_Groupe
+  });
+
+  // Ouvre la modal
+  this.modalService.open(editModalTemplate, { size: 'lg' });
+}
+
+
+
+  private populateForm(camera: Camera): void {
+    this.cameraForm.patchValue({
+      nom_Camera: camera.nom_Camera,
+      location: camera.location,
+      ip_adress: camera.ip_adress,
+      mac_adress: camera.mac_adress,
+      status_Camera: camera.status_Camera,
+      id_User: camera.id_User,
+      id_Groupe: camera.id_Groupe,
+      dateCreation: camera.dateCreation || new Date().toISOString().split('T')[0]
     });
   }
 
@@ -116,109 +141,76 @@ export class CameraListComponent implements OnInit {
     });
   }
 
-  private populateForm(camera: Camera): void {
-  this.cameraForm.patchValue({
-    nom_Camera: camera.nom_Camera,
-    location: camera.location,
-    dateCreation: camera.dateCreation || new Date().toISOString().split('T')[0],
-    status_Camera: camera.status_Camera,
-    id_User: camera.id_User
-  });
-}
-
-
   saveCamera(): void {
-  if (this.cameraForm.valid) {
-    const formValue = this.cameraForm.value;
+    if (this.cameraForm.valid) {
+      const formValue = this.cameraForm.value;
 
-    if (this.isEditMode && this.currentCamera) {
-      const index = this.cameras.findIndex(c => c.id_Camera === this.currentCamera!.id_Camera);
-      if (index !== -1) {
-        this.cameras[index] = {
-          ...this.currentCamera,
-          nom_Camera: formValue.nom_Camera,
-          location: formValue.location,
-          dateCreation: formValue.dateCreation,
-          status_Camera: formValue.status_Camera,
-          id_User: formValue.id_User
+      if (this.isEditMode && this.currentCamera) {
+        const index = this.cameras.findIndex(c => c.id_Camera === this.currentCamera!.id_Camera);
+        if (index !== -1) {
+          this.cameras[index] = {
+            ...this.currentCamera,
+            ...formValue
+          };
+        }
+      } else {
+        const newCamera: Camera = {
+          id_Camera: this.generateCameraId(),
+          ...formValue
         };
+        this.cameras.push(newCamera);
       }
+
+      this.filterCameras();
+      this.closeModal();
     } else {
-      const newCamera: Camera = {
-        id_Camera: this.generateCameraId(),
-        nom_Camera: formValue.nom_Camera,
-        location: formValue.location,
-        dateCreation: formValue.dateCreation,
-        status_Camera: formValue.status_Camera,
-        id_User: formValue.id_User
-      };
-      this.cameras.push(newCamera);
+      this.markFormGroupTouched();
     }
-
-    this.filterCameras();
-    this.closeModal();
-  } else {
-    this.markFormGroupTouched();
-  }
-}
-
-
-get status_Camera() {
-  return this.cameraForm.get('status_Camera');
-}
-
-get id_User() {
-  return this.cameraForm.get('id_User');
-}
-
-
-  editCamera(camera: Camera): void {
-    // This method would be called from the template
-    // You would need to pass the template reference here
-    console.log('Edit camera:', camera);
-    // Implementation depends on how you want to handle template reference
   }
 
   deleteCamera(camera: Camera): void {
     if (confirm(`Êtes-vous sûr de vouloir supprimer la caméra "${camera.nom_Camera}" ?`)) {
-      const index = this.cameras.findIndex(c => c.id_Camera === camera.id_Camera);
-      if (index !== -1) {
-        this.cameras.splice(index, 1);
-        this.filterCameras(); // Refresh filtered list
-      }
+      this.cameras = this.cameras.filter(c => c.id_Camera !== camera.id_Camera);
+      this.filterCameras();
     }
   }
 
   private closeModal(): void {
-    if (this.modalRef) {
-      this.modalRef.close();
-      this.modalRef = null;
-    }
+    this.modalRef?.close();
+    this.modalRef = null;
   }
 
   private generateCameraId(): string {
-    const maxId = this.cameras.reduce((max, camera) => {
-      const numericId = parseInt(camera.id_Camera.replace('CAM', ''), 10);
-      return numericId > max ? numericId : max;
+    const maxId = this.cameras.reduce((max, c) => {
+      const numericId = parseInt(c.id_Camera.replace('CAM', ''), 10);
+      return Math.max(max, numericId);
     }, 0);
-    
     return `CAM${String(maxId + 1).padStart(3, '0')}`;
   }
 
   private markFormGroupTouched(): void {
-    Object.keys(this.cameraForm.controls).forEach(key => {
-      const control = this.cameraForm.get(key);
-      if (control) {
-        control.markAsTouched();
-      }
+    Object.values(this.cameraForm.controls).forEach(control => {
+      control.markAsTouched();
     });
+  }
+
+  getErrorMessage(fieldName: string): string {
+    const field = this.cameraForm.get(fieldName);
+    if (field?.errors && field.touched) {
+      if (field.errors['required']) return `${fieldName} est requis`;
+      if (field.errors['minlength']) {
+        return `${fieldName} doit contenir au moins ${field.errors['minlength'].requiredLength} caractères`;
+      }
+      if (field.errors['pattern']) return `${fieldName} a un format invalide`;
+    }
+    return '';
   }
 
   onSubmit(): void {
     this.saveCamera();
   }
 
-  // Getters for form validation
+  // Getters
   get nom_Camera() {
     return this.cameraForm.get('nom_Camera');
   }
@@ -227,34 +219,40 @@ get id_User() {
     return this.cameraForm.get('location');
   }
 
+  get ip_adress() {
+    return this.cameraForm.get('ip_adress');
+  }
+
+  get mac_adress() {
+    return this.cameraForm.get('mac_adress');
+  }
+
+  get status_Camera() {
+    return this.cameraForm.get('status_Camera');
+  }
+
+  get id_User() {
+    return this.cameraForm.get('id_User');
+  }
+
+  get id_Groupe() {
+    return this.cameraForm.get('id_Groupe');
+  }
+
   get dateCreation() {
     return this.cameraForm.get('dateCreation');
   }
 
-  // Method to get validation error messages
-  getErrorMessage(fieldName: string): string {
-    const field = this.cameraForm.get(fieldName);
-    if (field?.errors && field.touched) {
-      if (field.errors['required']) {
-        return `${fieldName} est requis`;
-      }
-      if (field.errors['minlength']) {
-        return `${fieldName} doit contenir au moins ${field.errors['minlength'].requiredLength} caractères`;
-      }
-    }
-    return '';
-  }
-
-  // Statistics calculations
+  // Statistiques
   get activeCameras(): number {
-    return this.cameras.filter(camera => camera.status_Camera === 'normal').length;
+    return this.cameras.filter(c => c.status_Camera === 'normal').length;
   }
 
   get offlineCameras(): number {
-    return this.cameras.filter(camera => camera.status_Camera === 'offline').length;
+    return this.cameras.filter(c => c.status_Camera === 'offline').length;
   }
 
   get blurryCameras(): number {
-    return this.cameras.filter(camera => camera.status_Camera === 'blurry').length;
+    return this.cameras.filter(c => c.status_Camera === 'blurry').length;
   }
 }

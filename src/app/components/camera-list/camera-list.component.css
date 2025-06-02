@@ -11,6 +11,244 @@
 /* Reset Bootstrap conflicts */
 :host * {
   box-sizing: border-box;
+}/* Add these styles to your existing CSS file */
+
+/* Make table container horizontally scrollable on small screens */
+.table-container {
+  background-color: white !important;
+  border-radius: 12px !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05) !important;
+  overflow: hidden;
+  border: 1px solid rgba(0, 0, 0, 0.05) !important;
+  overflow-x: auto; /* Enable horizontal scroll */
+  -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+}
+
+/* Table wrapper for better scroll behavior */
+.table-wrapper {
+  overflow-x: auto;
+  min-width: 100%;
+}
+
+/* Table Styles - Override Bootstrap with responsive design */
+table {
+  width: 100% !important;
+  border-collapse: collapse !important;
+  margin: 0 !important;
+  min-width: 800px; /* Minimum width to prevent cramping */
+  table-layout: auto; /* Allow flexible column sizing */
+}
+
+th, td {
+  padding: 12px 16px !important;
+  text-align: left !important;
+  border-bottom: 1px solid #dee2e6 !important;
+  border-top: none !important;
+  border-left: none !important;
+  border-right: none !important;
+  white-space: nowrap; /* Prevent text wrapping in cells */
+  overflow: hidden;
+  text-overflow: ellipsis; /* Add ... for overflow text */
+}
+
+/* Specific column widths for better balance */
+th:nth-child(1), td:nth-child(1) { /* ID */
+  width: 80px;
+  min-width: 80px;
+}
+
+th:nth-child(2), td:nth-child(2) { /* Nom */
+  width: 120px;
+  min-width: 120px;
+}
+
+th:nth-child(3), td:nth-child(3) { /* Localisation */
+  width: 130px;
+  min-width: 130px;
+}
+
+th:nth-child(4), td:nth-child(4) { /* IP */
+  width: 120px;
+  min-width: 120px;
+}
+
+th:nth-child(5), td:nth-child(5) { /* MAC */
+  width: 140px;
+  min-width: 140px;
+}
+
+th:nth-child(6), td:nth-child(6) { /* Statut */
+  width: 100px;
+  min-width: 100px;
+}
+
+th:nth-child(7), td:nth-child(7) { /* Utilisateur */
+  width: 110px;
+  min-width: 110px;
+}
+
+th:nth-child(8), td:nth-child(8) { /* Groupe */
+  width: 110px;
+  min-width: 110px;
+}
+
+th:nth-child(9), td:nth-child(9) { /* Actions */
+  width: 180px;
+  min-width: 180px;
+  white-space: nowrap;
+}
+
+th {
+  font-weight: 600 !important;
+  color: #6c757d !important;
+  font-size: 13px !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.5px !important;
+  background-color: #fafbfc !important;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+td {
+  font-size: 14px !important;
+  color: #212529 !important;
+}
+
+tr:hover {
+  background-color: #fafbfc !important;
+}
+
+/* Status badges - more compact */
+.status-badge {
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: 500;
+  text-transform: capitalize;
+  display: inline-block;
+  min-width: 60px;
+  text-align: center;
+}
+
+/* Button adjustments for table actions */
+.btn-sm {
+  padding: 4px 8px !important;
+  font-size: 11px !important;
+  margin-right: 4px !important;
+}
+
+/* Responsive design for different screen sizes */
+@media (max-width: 1200px) {
+  .content-container {
+    padding: 20px 15px;
+  }
+  
+  .main-header {
+    padding: 0 20px;
+  }
+  
+  .search-bar input {
+    width: 250px;
+  }
+}
+
+@media (max-width: 992px) {
+  .stats-cards {
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+  }
+  
+  .table-header {
+    flex-direction: column;
+    gap: 15px;
+    align-items: flex-start;
+  }
+  
+  .table-actions {
+    width: 100%;
+    justify-content: space-between;
+  }
+  
+  .search-bar input {
+    width: 200px;
+  }
+}
+
+@media (max-width: 768px) {
+  .main-header {
+    flex-direction: column;
+    height: auto;
+    padding: 15px;
+    gap: 15px;
+  }
+  
+  .main-header h1 {
+    font-size: 1.3rem !important;
+  }
+  
+  .stats-cards {
+    grid-template-columns: 1fr;
+  }
+  
+  .content-container {
+    padding: 15px 10px;
+  }
+  
+  .search-bar input {
+    width: 100%;
+    max-width: 250px;
+  }
+  
+  /* Stack table actions vertically on mobile */
+  .table-actions {
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .filter-dropdown select,
+  .btn {
+    width: 100%;
+  }
+  
+  /* Adjust table for mobile - show scroll hint */
+  .table-container::after {
+    content: "← Faites glisser pour voir plus →";
+    display: block;
+    text-align: center;
+    padding: 10px;
+    font-size: 12px;
+    color: #6c757d;
+    background-color: #f8f9fa;
+    border-top: 1px solid #dee2e6;
+  }
+}
+
+@media (max-width: 576px) {
+  th, td {
+    padding: 8px 12px !important;
+    font-size: 12px !important;
+  }
+  
+  th {
+    font-size: 11px !important;
+  }
+  
+  .btn-sm {
+    padding: 3px 6px !important;
+    font-size: 10px !important;
+  }
+  
+  /* Make action buttons stack vertically on very small screens */
+  td:nth-child(9) {
+    white-space: normal;
+  }
+  
+  td:nth-child(9) .btn {
+    display: block;
+    margin-bottom: 2px;
+    width: 100%;
+  }
 }
 
 .dashboard-container {
@@ -452,4 +690,242 @@ tr:hover {
   pointer-events: none;
   font-size: 16px;
 }
+/* Add these styles to your existing CSS file */
 
+/* Make table container horizontally scrollable on small screens */
+.table-container {
+  background-color: white !important;
+  border-radius: 12px !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05) !important;
+  overflow: hidden;
+  border: 1px solid rgba(0, 0, 0, 0.05) !important;
+  overflow-x: auto; /* Enable horizontal scroll */
+  -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+}
+
+/* Table wrapper for better scroll behavior */
+.table-wrapper {
+  overflow-x: auto;
+  min-width: 100%;
+}
+
+/* Table Styles - Override Bootstrap with responsive design */
+table {
+  width: 100% !important;
+  border-collapse: collapse !important;
+  margin: 0 !important;
+  min-width: 800px; /* Minimum width to prevent cramping */
+  table-layout: auto; /* Allow flexible column sizing */
+}
+
+th, td {
+  padding: 12px 16px !important;
+  text-align: left !important;
+  border-bottom: 1px solid #dee2e6 !important;
+  border-top: none !important;
+  border-left: none !important;
+  border-right: none !important;
+  white-space: nowrap; /* Prevent text wrapping in cells */
+  overflow: hidden;
+  text-overflow: ellipsis; /* Add ... for overflow text */
+}
+
+/* Specific column widths for better balance */
+th:nth-child(1), td:nth-child(1) { /* ID */
+  width: 80px;
+  min-width: 80px;
+}
+
+th:nth-child(2), td:nth-child(2) { /* Nom */
+  width: 120px;
+  min-width: 120px;
+}
+
+th:nth-child(3), td:nth-child(3) { /* Localisation */
+  width: 130px;
+  min-width: 130px;
+}
+
+th:nth-child(4), td:nth-child(4) { /* IP */
+  width: 120px;
+  min-width: 120px;
+}
+
+th:nth-child(5), td:nth-child(5) { /* MAC */
+  width: 140px;
+  min-width: 140px;
+}
+
+th:nth-child(6), td:nth-child(6) { /* Statut */
+  width: 100px;
+  min-width: 100px;
+}
+
+th:nth-child(7), td:nth-child(7) { /* Utilisateur */
+  width: 110px;
+  min-width: 110px;
+}
+
+th:nth-child(8), td:nth-child(8) { /* Groupe */
+  width: 110px;
+  min-width: 110px;
+}
+
+th:nth-child(9), td:nth-child(9) { /* Actions */
+  width: 180px;
+  min-width: 180px;
+  white-space: nowrap;
+}
+
+th {
+  font-weight: 600 !important;
+  color: #6c757d !important;
+  font-size: 13px !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.5px !important;
+  background-color: #fafbfc !important;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+td {
+  font-size: 14px !important;
+  color: #212529 !important;
+}
+
+tr:hover {
+  background-color: #fafbfc !important;
+}
+
+/* Status badges - more compact */
+.status-badge {
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: 500;
+  text-transform: capitalize;
+  display: inline-block;
+  min-width: 60px;
+  text-align: center;
+}
+
+/* Button adjustments for table actions */
+.btn-sm {
+  padding: 4px 8px !important;
+  font-size: 11px !important;
+  margin-right: 4px !important;
+}
+
+/* Responsive design for different screen sizes */
+@media (max-width: 1200px) {
+  .content-container {
+    padding: 20px 15px;
+  }
+  
+  .main-header {
+    padding: 0 20px;
+  }
+  
+  .search-bar input {
+    width: 250px;
+  }
+}
+
+@media (max-width: 992px) {
+  .stats-cards {
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+  }
+  
+  .table-header {
+    flex-direction: column;
+    gap: 15px;
+    align-items: flex-start;
+  }
+  
+  .table-actions {
+    width: 100%;
+    justify-content: space-between;
+  }
+  
+  .search-bar input {
+    width: 200px;
+  }
+}
+
+@media (max-width: 768px) {
+  .main-header {
+    flex-direction: column;
+    height: auto;
+    padding: 15px;
+    gap: 15px;
+  }
+  
+  .main-header h1 {
+    font-size: 1.3rem !important;
+  }
+  
+  .stats-cards {
+    grid-template-columns: 1fr;
+  }
+  
+  .content-container {
+    padding: 15px 10px;
+  }
+  
+  .search-bar input {
+    width: 100%;
+    max-width: 250px;
+  }
+  
+  /* Stack table actions vertically on mobile */
+  .table-actions {
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .filter-dropdown select,
+  .btn {
+    width: 100%;
+  }
+  
+  /* Adjust table for mobile - show scroll hint */
+  .table-container::after {
+    content: "← Faites glisser pour voir plus →";
+    display: block;
+    text-align: center;
+    padding: 10px;
+    font-size: 12px;
+    color: #6c757d;
+    background-color: #f8f9fa;
+    border-top: 1px solid #dee2e6;
+  }
+}
+
+@media (max-width: 576px) {
+  th, td {
+    padding: 8px 12px !important;
+    font-size: 12px !important;
+  }
+  
+  th {
+    font-size: 11px !important;
+  }
+  
+  .btn-sm {
+    padding: 3px 6px !important;
+    font-size: 10px !important;
+  }
+  
+  /* Make action buttons stack vertically on very small screens */
+  td:nth-child(9) {
+    white-space: normal;
+  }
+  
+  td:nth-child(9) .btn {
+    display: block;
+    margin-bottom: 2px;
+    width: 100%;
+  }
+}
